@@ -1,4 +1,4 @@
-Microchip Technology Inc, vv3_31 (A) fiÞð0(
+Microchip Technology Inc, vv3_31 (A) 
 
 Tool Name:
   c:\program files (x86)\microchip\mplab c30\bin\bin\..\bin/pic30-elf-ld.exe
@@ -286,12 +286,12 @@ __CONFIG1         0x00abfe          0x2
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x29d3
+.debug_info       0x000000       0x29b7
  *(.debug_info)
- .debug_info      0x000000        0x404 build/default/production/_ext/1472/PIC24ExplDemo.o
- .debug_info      0x000404        0x592 build/default/production/_ext/1472/iomapping.o
- .debug_info      0x000996        0x7a2 build/default/production/_ext/1472/spimpol.o
- .debug_info      0x001138       0x189b build/default/production/_ext/1472/lis3dh_driver.o
+ .debug_info      0x000000        0x3fd build/default/production/_ext/1472/PIC24ExplDemo.o
+ .debug_info      0x0003fd        0x58b build/default/production/_ext/1472/iomapping.o
+ .debug_info      0x000988        0x79b build/default/production/_ext/1472/spimpol.o
+ .debug_info      0x001123       0x1894 build/default/production/_ext/1472/lis3dh_driver.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0x3e7
