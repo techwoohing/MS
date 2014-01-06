@@ -23,7 +23,6 @@ _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_
 
 volatile unsigned long steps = 0;
 unsigned char step_int_cnt = 0;
-unsigned char time_out = 0;
 
 int main(void)
 {
@@ -77,11 +76,11 @@ int main(void)
 //        AxesRaw_t data;
 
 //        response = LIS3DH_GetAccAxesRaw(&data);
-        if(time_out)
+        if(step_int_cnt)
         {
-            time_out--;
+            step_int_cnt--;
         }
-        else//if(!time_out)
+        else
         {
             unsigned char temp;
 

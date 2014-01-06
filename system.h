@@ -56,7 +56,6 @@
 
 extern volatile unsigned long steps;
 extern unsigned char step_int_cnt;
-extern unsigned char time_out;
 /*****************************************************************************
  * EOF
  *****************************************************************************/
