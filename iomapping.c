@@ -26,7 +26,8 @@ void ioMap(){
 
 //INPUTS **********************
 
-    RPINR20bits.SDI1R = 7;   /* Assign RP7 as Input Pin */
+    RPINR20bits.SDI1R = 7;   /* Assign RP7 as MISO */
+    RPINR0bits.INT1R  = 9;   /* Assign RP9 as INT1 */
 
 //OUTPUTS *********************
 

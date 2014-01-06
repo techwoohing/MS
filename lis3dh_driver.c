@@ -43,7 +43,7 @@
 u8_t LIS3DH_ReadReg(u8_t Reg, u8_t* Data) {
   //To be completed with either I2c or SPI reading function
   //i.e. *Data = SPI_Mems_Read_Reg( Reg );
-    PORTB &= 0xFEFF;
+    LIS3DH_CS_LOW;
 
     Reg |= 0x80;
 
@@ -59,7 +59,7 @@ u8_t LIS3DH_ReadReg(u8_t Reg, u8_t* Data) {
     while(!(IFS0bits.SPI1IF));
     IFS0bits.SPI1IF = 0;
 
-    PORTB |= 0x0100;
+    LIS3DH_CS_HI;
 
     return 1;
 }
@@ -78,7 +78,7 @@ u8_t LIS3DH_WriteReg(u8_t WriteAddr, u8_t Data) {
   //i.e. SPI_Mems_Write_Reg(WriteAddr, Data);
     unsigned char dummy;
 
-    PORTB &= 0xFEFF;
+    LIS3DH_CS_LOW;
 
     WriteAddr &= 0x7F;
 
@@ -94,7 +94,7 @@ u8_t LIS3DH_WriteReg(u8_t WriteAddr, u8_t Data) {
     while(!(IFS0bits.SPI1IF));
     IFS0bits.SPI1IF = 0;
 
-    PORTB |= 0x0100;
+    LIS3DH_CS_HI;
 
     return 1;
 }

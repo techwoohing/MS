@@ -1,12 +1,13 @@
 /*****************************************************************************
- *  System
- * 	Modified for PIC24FJ64GA004 family with PPS.
+ *
+ * Timer 
+ *
  *****************************************************************************
- * FileName:        system.h
+ * FileName:        timer.h
  * Dependencies:    
- * Processor:       PIC24
- * Compiler:       	MPLAB C30
- * Linker:          MPLAB LINK30
+ * Processor:
+ * Compiler:
+ * Linker:  
  * Company:         Microchip Technology Incorporated
  *
  * Software License Agreement
@@ -31,32 +32,45 @@
  * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
  *
  *
- * The file assembles all header files and
- * contains shared information for all modules
+ * This is a simple timer function used to provide quant for state machines
  *
  * Author               Date        Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Anton Alkhimenok		10/21/05	...
- * Brant Ivey			 3/14/06	Modified for PIC24FJ64GA004 family with PPS.
+ * Ross Fosler			04/28/03	...	
+ * 
  *****************************************************************************/
 
-// External oscillator frequency
-#define SYSCLK          8000000
+/*********************************************************************
+ * Function:        TimerInit
+ *
+ * PreCondition:    None.
+ *
+ * Input:       	None.
+ *                  
+ * Output:      	None.
+ *
+ * Overview:        Initializes Timer0 for use.
+ *
+ ********************************************************************/
+extern void TimerInit(void);
 
-//Uncomment if PIC24F part is installed directly on board
-//#define PIM_SWAP
+/*********************************************************************
+ * Function:        TimerIsOverflowEvent
+ *
+ * PreCondition:    None.
+ *
+ * Input:       	None.	
+ *                  
+ * Output:      	Status.
+ *
+ * Overview:        Checks for an overflow event, returns TRUE if 
+ *					an overflow occured.
+ *
+ * Note:            This function should be checked at least twice
+ *					per overflow period.
+ ********************************************************************/
+extern unsigned char TimerIsOverflowEvent(void);
 
-#include <p24fxxxx.h>
-#include "spimpol.h"
-#include "timer1.h"
-#include "lis3dh_driver.h"
-
-#define LIS3DH_CS_LOW   PORTB &= 0xFEFF
-#define LIS3DH_CS_HI    PORTB |= 0x0100
-
-extern volatile unsigned long steps;
-extern unsigned char step_int_cnt;
-extern unsigned char time_out;
-/*****************************************************************************
+/*********************************************************************
  * EOF
- *****************************************************************************/
+ ********************************************************************/

@@ -1,11 +1,12 @@
 /*****************************************************************************
- *  System
- * 	Modified for PIC24FJ64GA004 family with PPS.
+ *
+ * Timer 
+ *
  *****************************************************************************
- * FileName:        system.h
- * Dependencies:    
+ * FileName:        timer1.c
+ * Dependencies:    system.h
  * Processor:       PIC24
- * Compiler:       	MPLAB C30
+ * Compiler:        MPLAB C30
  * Linker:          MPLAB LINK30
  * Company:         Microchip Technology Incorporated
  *
@@ -30,33 +31,46 @@
  * IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR 
  * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
  *
- *
- * The file assembles all header files and
- * contains shared information for all modules
+ * Functions to setup timer and detect overflow
  *
  * Author               Date        Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Anton Alkhimenok		10/21/05	...
- * Brant Ivey			 3/14/06	Modified for PIC24FJ64GA004 family with PPS.
+ * Ross Fosler			04/28/03	...	
+ * 
  *****************************************************************************/
+#include "system.h"
 
-// External oscillator frequency
-#define SYSCLK          8000000
+/*********************************************************************
+ * Function:        TimerInit
+ *
+ * PreCondition:    None.
+ *
+ * Input:       	None.	
+ *                  
+ * Output:      	None.
+ *
+ * Overview:        Initializes Timer0 for use.
+ *
+ ********************************************************************/
+void TimerInit(void)
+{	
+	PR1 = 31250;
+	
+	IPC0bits.T1IP = 5;
+        T1CON = 0;
+        T1CONbits.TCKPS = 3;
+	IFS0bits.T1IF = 0;
 
-//Uncomment if PIC24F part is installed directly on board
-//#define PIM_SWAP
+}
 
-#include <p24fxxxx.h>
-#include "spimpol.h"
-#include "timer1.h"
-#include "lis3dh_driver.h"
+void __attribute__((interrupt,auto_psv)) _T1Interrupt()
+{
+    IFS0bits.T1IF = 0;
+    T1CONbits.TON = 0;
 
-#define LIS3DH_CS_LOW   PORTB &= 0xFEFF
-#define LIS3DH_CS_HI    PORTB |= 0x0100
+    time_out = 1;
+}
 
-extern volatile unsigned long steps;
-extern unsigned char step_int_cnt;
-extern unsigned char time_out;
-/*****************************************************************************
+/*********************************************************************
  * EOF
- *****************************************************************************/
+ ********************************************************************/
