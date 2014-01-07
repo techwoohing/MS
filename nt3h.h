@@ -39,11 +39,8 @@
 void nt3h_Initialise (void);
 void nt3h_ReadBlock  (uint8_t block, uint8_t* pData, uint8_t nBytes);
 void nt3h_WriteBlock (uint8_t block, uint8_t* pData, uint8_t nBytes);
-void nt3h_Debug (void);
+void nt3h_WriteNdefUint16Data (uint16_t data);
 
-void nt3h_Debug2 (uint8_t block, uint8_t nBytes);
-void nt3h_debug3   (uint8_t block, uint8_t* pData, uint8_t nBytes);
-void copyInit (void);
 /*************************************************************************
  *   Global Data
  *************************************************************************/

@@ -36,6 +36,8 @@
 #define SLAVE_ADRESS     0xAA
 #define WR_CMD_BITMASK   0x00
 #define RD_CMD_BITMASK   0x01
+#define HBYTE_ADDR          0x07
+#define LBYTE_ADDR          0x08
 
 
 /*************************************************************************
@@ -51,7 +53,8 @@
 /*************************************************************************
  * Private Variables (File Local Variables)
  *************************************************************************/
-
+static uint8_t ndefSramPage1Data[NT3H_BLOCk_SIZE] = {0x01, 0x03, 0xA0, 0x0C, 0x34, 0x03, 0x12, 0xD2, 0x0A, 0x05, 0x74, 0x65, 0x78, 0x74, 0x2f, 0x70};
+static uint8_t ndefSramPage2Data[NT3H_BLOCk_SIZE] = {0x6c, 0x61, 0x69, 0x6e, 'M', 'S', '_', 0xff, 0xf5 ,0xfe,0, 0, 0, 0, 0, 0  };
 
 /*************************************************************************
  * Exported Variables initialisation
@@ -90,14 +93,33 @@ static void i2c2_initialisation (void)
 }
 
 
+void nt3h_WriteNdefUint16Data (uint16_t data)
+{
+
+    // the following is a test write and should be removed in the future
+    nt3h_WriteBlock(0xF8 ,ndefSramPage1Data, NT3H_BLOCk_SIZE);
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+
+    ndefSramPage2Data [HBYTE_ADDR] = (uint8_t)(data >> 8);
+    ndefSramPage2Data [LBYTE_ADDR] = (uint8_t)(data &0xFF);
+    nt3h_WriteBlock (0xF9 ,ndefSramPage2Data, NT3H_BLOCk_SIZE);
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+}
+
+
 
 void nt3h_Initialise (void)
 {
     uint8_t sessionData[NT3H_BLOCk_SIZE];
     uint16_t i;
-     //   uint8_t testWrite[NT3H_BLOCk_SIZE] = {0x03, 0x0e, 0xd1, 0x01, 0x0a, 0x55, 0x03, 0x6e, 0x6f, 0x6b, 0x69, 0x61, 0x2e, 0x63, 0x6f, 0x6d};
-    uint8_t testWrite[NT3H_BLOCk_SIZE] = {0x01, 0x03, 0xA0, 0x0C, 0x34, 0x03, 0x12, 0xD2, 0x0A, 0x05, 0x74, 0x65, 0x78, 0x74, 0x2f, 0x70};
-    uint8_t testWrite2[NT3H_BLOCk_SIZE] = {0x6c, 0x61, 0x69, 0x6e, 'M', 'S', '_', 0xff, 0xf5 ,0xfe,0, 0, 0, 0, 0, 0  };
+     //   uint8_t ndefSramPage1Data[NT3H_BLOCk_SIZE] = {0x03, 0x0e, 0xd1, 0x01, 0x0a, 0x55, 0x03, 0x6e, 0x6f, 0x6b, 0x69, 0x61, 0x2e, 0x63, 0x6f, 0x6d};
+
 
     i2c2_initialisation();
 
@@ -121,17 +143,7 @@ void nt3h_Initialise (void)
     i = 50000;while(i){i--;}//delay
 
     // the following is a test write and should be removed in the future
-    nt3h_WriteBlock(0xF8 ,testWrite, NT3H_BLOCk_SIZE);
-    asm("nop");//breakpoint
-    asm("nop");//breakpoint
-    asm("nop");//breakpoint
-    asm("nop");//breakpoint
-
-    nt3h_WriteBlock (0xF9 ,testWrite2, NT3H_BLOCk_SIZE);
-    asm("nop");//breakpoint
-    asm("nop");//breakpoint
-    asm("nop");//breakpoint
-    asm("nop");//breakpoint
+    nt3h_WriteNdefUint16Data(0xAA55);
 
 }
 
