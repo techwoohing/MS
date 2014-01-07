@@ -14,7 +14,6 @@
  *****************************************************************************/
 
 #include "system.h"
-#include "nt3h.h"
 
 
 // Setup configuration bits
@@ -87,13 +86,18 @@ int main(void)
         }
         else
         {
-            unsigned char temp;
+            uint8_t temp;
 
             response = LIS3DH_GetInt1Src(&temp);
             response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
             response = LIS3DH_SetIntConfiguration(0x2A);
 
+            nt3h_WriteNdefUint16Data(steps);
+
             Sleep();
+
+            // Setup SPI
+            SPIInit();
         }
 
     }// End of while(1)...

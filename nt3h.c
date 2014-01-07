@@ -131,6 +131,7 @@ void nt3h_Initialise (void)
     asm("nop");//breakpoint
 
     sessionData[0] |= 0x02;//SRAM_MIRROR_ON_OFF = 1
+//    sessionData[0] &= 0xFD;//SRAM_MIRROR_ON_OFF = 0
     sessionData[2] = 1;
     nt3h_WriteBlock (0x7A ,sessionData, NT3H_BLOCk_SIZE);
     asm("nop");//breakpoint

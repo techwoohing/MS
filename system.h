@@ -47,15 +47,16 @@
 //#define PIM_SWAP
 
 #include <p24fxxxx.h>
+#include "typedefs.h"
 #include "spimpol.h"
-#include "timer1.h"
 #include "lis3dh_driver.h"
+#include "nt3h.h"
 
 #define LIS3DH_CS_LOW   PORTB &= 0xFEFF
 #define LIS3DH_CS_HI    PORTB |= 0x0100
 
-extern volatile unsigned long steps;
-extern unsigned char step_int_cnt;
+extern volatile uint32_t steps;
+extern uint8_t step_int_cnt;
 /*****************************************************************************
  * EOF
  *****************************************************************************/

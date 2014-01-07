@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../PIC24ExplDemo.c ../iomapping.c ../spimpol.c ../lis3dh_driver.c ../int1.c
+SOURCEFILES_QUOTED_IF_SPACED=../PIC24ExplDemo.c ../iomapping.c ../spimpol.c ../lis3dh_driver.c ../int1.c ../nt3h.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1472/PIC24ExplDemo.o ${OBJECTDIR}/_ext/1472/iomapping.o ${OBJECTDIR}/_ext/1472/spimpol.o ${OBJECTDIR}/_ext/1472/lis3dh_driver.o ${OBJECTDIR}/_ext/1472/int1.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1472/PIC24ExplDemo.o.d ${OBJECTDIR}/_ext/1472/iomapping.o.d ${OBJECTDIR}/_ext/1472/spimpol.o.d ${OBJECTDIR}/_ext/1472/lis3dh_driver.o.d ${OBJECTDIR}/_ext/1472/int1.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1472/PIC24ExplDemo.o ${OBJECTDIR}/_ext/1472/iomapping.o ${OBJECTDIR}/_ext/1472/spimpol.o ${OBJECTDIR}/_ext/1472/lis3dh_driver.o ${OBJECTDIR}/_ext/1472/int1.o ${OBJECTDIR}/_ext/1472/nt3h.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1472/PIC24ExplDemo.o.d ${OBJECTDIR}/_ext/1472/iomapping.o.d ${OBJECTDIR}/_ext/1472/spimpol.o.d ${OBJECTDIR}/_ext/1472/lis3dh_driver.o.d ${OBJECTDIR}/_ext/1472/int1.o.d ${OBJECTDIR}/_ext/1472/nt3h.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1472/PIC24ExplDemo.o ${OBJECTDIR}/_ext/1472/iomapping.o ${OBJECTDIR}/_ext/1472/spimpol.o ${OBJECTDIR}/_ext/1472/lis3dh_driver.o ${OBJECTDIR}/_ext/1472/int1.o
+OBJECTFILES=${OBJECTDIR}/_ext/1472/PIC24ExplDemo.o ${OBJECTDIR}/_ext/1472/iomapping.o ${OBJECTDIR}/_ext/1472/spimpol.o ${OBJECTDIR}/_ext/1472/lis3dh_driver.o ${OBJECTDIR}/_ext/1472/int1.o ${OBJECTDIR}/_ext/1472/nt3h.o
 
 # Source Files
-SOURCEFILES=../PIC24ExplDemo.c ../iomapping.c ../spimpol.c ../lis3dh_driver.c ../int1.c
+SOURCEFILES=../PIC24ExplDemo.c ../iomapping.c ../spimpol.c ../lis3dh_driver.c ../int1.c ../nt3h.c
 
 
 CFLAGS=
@@ -126,6 +126,13 @@ ${OBJECTDIR}/_ext/1472/int1.o: ../int1.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/_ext/1472/int1.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/int1.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/h" -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/inc" -MMD -MF "${OBJECTDIR}/_ext/1472/int1.o.d" -o ${OBJECTDIR}/_ext/1472/int1.o ../int1.c    
 	
+${OBJECTDIR}/_ext/1472/nt3h.o: ../nt3h.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1472 
+	@${RM} ${OBJECTDIR}/_ext/1472/nt3h.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1472/nt3h.o.ok ${OBJECTDIR}/_ext/1472/nt3h.o.err 
+	@${RM} ${OBJECTDIR}/_ext/1472/nt3h.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/nt3h.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/h" -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/inc" -MMD -MF "${OBJECTDIR}/_ext/1472/nt3h.o.d" -o ${OBJECTDIR}/_ext/1472/nt3h.o ../nt3h.c    
+	
 else
 ${OBJECTDIR}/_ext/1472/PIC24ExplDemo.o: ../PIC24ExplDemo.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1472 
@@ -161,6 +168,13 @@ ${OBJECTDIR}/_ext/1472/int1.o: ../int1.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/_ext/1472/int1.o.ok ${OBJECTDIR}/_ext/1472/int1.o.err 
 	@${RM} ${OBJECTDIR}/_ext/1472/int1.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/int1.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/h" -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/inc" -MMD -MF "${OBJECTDIR}/_ext/1472/int1.o.d" -o ${OBJECTDIR}/_ext/1472/int1.o ../int1.c    
+	
+${OBJECTDIR}/_ext/1472/nt3h.o: ../nt3h.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1472 
+	@${RM} ${OBJECTDIR}/_ext/1472/nt3h.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1472/nt3h.o.ok ${OBJECTDIR}/_ext/1472/nt3h.o.err 
+	@${RM} ${OBJECTDIR}/_ext/1472/nt3h.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/nt3h.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/h" -I"C:/Program Files (x86)/Microchip/MPLAB C30/support/PIC24F/inc" -MMD -MF "${OBJECTDIR}/_ext/1472/nt3h.o.d" -o ${OBJECTDIR}/_ext/1472/nt3h.o ../nt3h.c    
 	
 endif
 
