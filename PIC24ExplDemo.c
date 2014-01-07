@@ -14,6 +14,7 @@
  *****************************************************************************/
 
 #include "system.h"
+#include "nt3h.h"
 
 // Setup configuration bits
 _CONFIG1(WDTPS_PS1 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx1 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
@@ -23,6 +24,44 @@ _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_
 
 volatile unsigned long steps = 0;
 unsigned char step_int_cnt = 0;
+
+
+void nt3h_demo (void)
+{
+    static bool_t isInitalised = FALSE;
+    uint8_t testRead[NT3H_BLOCk_SIZE];
+    uint8_t testWrite[NT3H_BLOCk_SIZE];
+    uint8_t testBlock =0;
+    uint16_t i;
+
+    if(isInitalised == FALSE)
+    {
+        isInitalised = TRUE;
+        nt3h_Initialise();
+
+        i = 50000;while(i){i--;}//delay
+
+    }
+
+    for (i=0; i<NT3H_BLOCk_SIZE ; i++)
+    {
+        testWrite[i] = i;
+    }
+
+    nt3h_WriteBlock(0xF8 ,testWrite, NT3H_BLOCk_SIZE);
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+
+    nt3h_ReadBlock (0xF8 ,testRead, NT3H_BLOCk_SIZE);
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+    asm("nop");//breakpoint
+
+}
+
 
 int main(void)
 {
@@ -74,7 +113,7 @@ int main(void)
     while (1)
     {
 //        AxesRaw_t data;
-
+        nt3h_demo();
 //        response = LIS3DH_GetAccAxesRaw(&data);
         if(step_int_cnt)
         {

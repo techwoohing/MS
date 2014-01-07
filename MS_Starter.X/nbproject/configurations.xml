@@ -8,6 +8,8 @@
       <itemPath>../iomapping.h</itemPath>
       <itemPath>../spimpol.h</itemPath>
       <itemPath>../lis3dh_driver.h</itemPath>
+      <itemPath>../nt3h.h</itemPath>
+      <itemPath>../typedefs.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -21,6 +23,7 @@
       <itemPath>../spimpol.c</itemPath>
       <itemPath>../lis3dh_driver.c</itemPath>
       <itemPath>../int1.c</itemPath>
+      <itemPath>../nt3h.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -30,6 +33,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>..</Elem>
+    <Elem>../../../../Users/Trevor/Desktop</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
