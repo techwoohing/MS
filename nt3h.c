@@ -38,7 +38,9 @@
 #define RD_CMD_BITMASK   0x01
 #define HBYTE_ADDR          0x07
 #define LBYTE_ADDR          0x08
-
+#define SRAM_MAP_PAGE_1     0xF8
+#define SRAM_MAP_PAGE_2     0xF9
+#define CONFIG_PAGE         0x7A
 
 /*************************************************************************
  * Private macros
@@ -97,7 +99,7 @@ void nt3h_WriteNdefUint16Data (uint16_t data)
 {
 
     // the following is a test write and should be removed in the future
-    nt3h_WriteBlock(0xF8 ,ndefSramPage1Data, NT3H_BLOCk_SIZE);
+    nt3h_WriteBlock(SRAM_MAP_PAGE_1 ,ndefSramPage1Data, NT3H_BLOCk_SIZE);
     asm("nop");//breakpoint
     asm("nop");//breakpoint
     asm("nop");//breakpoint
@@ -105,13 +107,22 @@ void nt3h_WriteNdefUint16Data (uint16_t data)
 
     ndefSramPage2Data [HBYTE_ADDR] = (uint8_t)(data >> 8);
     ndefSramPage2Data [LBYTE_ADDR] = (uint8_t)(data &0xFF);
-    nt3h_WriteBlock (0xF9 ,ndefSramPage2Data, NT3H_BLOCk_SIZE);
+    nt3h_WriteBlock (SRAM_MAP_PAGE_2 ,ndefSramPage2Data, NT3H_BLOCk_SIZE);
     asm("nop");//breakpoint
     asm("nop");//breakpoint
     asm("nop");//breakpoint
     asm("nop");//breakpoint
 }
 
+
+uint16_t nt3h_ReadNdefUint16Data (void)
+{
+
+    nt3h_ReadBlock (SRAM_MAP_PAGE_2 ,ndefSramPage2Data, NT3H_BLOCk_SIZE);
+
+    return (uint16_t)((ndefSramPage2Data [HBYTE_ADDR] << 8)|(ndefSramPage2Data [LBYTE_ADDR]));
+
+}
 
 
 void nt3h_Initialise (void)
@@ -124,7 +135,7 @@ void nt3h_Initialise (void)
     i2c2_initialisation();
 
     //Setup the SRAM mirror fucntion
-    nt3h_ReadBlock (0x7A ,sessionData, NT3H_BLOCk_SIZE);
+    nt3h_ReadBlock (CONFIG_PAGE ,sessionData, NT3H_BLOCk_SIZE);
     asm("nop");//breakpoint
     asm("nop");//breakpoint
     asm("nop");//breakpoint
@@ -133,7 +144,7 @@ void nt3h_Initialise (void)
     sessionData[0] |= 0x02;//SRAM_MIRROR_ON_OFF = 1
 //    sessionData[0] &= 0xFD;//SRAM_MIRROR_ON_OFF = 0
     sessionData[2] = 1;
-    nt3h_WriteBlock (0x7A ,sessionData, NT3H_BLOCk_SIZE);
+    nt3h_WriteBlock (CONFIG_PAGE ,sessionData, NT3H_BLOCk_SIZE);
     asm("nop");//breakpoint
     asm("nop");//breakpoint
     asm("nop");//breakpoint

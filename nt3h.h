@@ -40,6 +40,7 @@ void nt3h_Initialise (void);
 void nt3h_ReadBlock  (uint8_t block, uint8_t* pData, uint8_t nBytes);
 void nt3h_WriteBlock (uint8_t block, uint8_t* pData, uint8_t nBytes);
 void nt3h_WriteNdefUint16Data (uint16_t data);
+uint16_t nt3h_ReadNdefUint16Data (void);
 
 /*************************************************************************
  *   Global Data
