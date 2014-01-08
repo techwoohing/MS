@@ -24,6 +24,7 @@ _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_
 
 volatile unsigned long steps = 0;
 unsigned char step_int_cnt = 0;
+unsigned char time_out = 1;
 
 int main(void)
 {
@@ -37,6 +38,7 @@ int main(void)
 
     // Setup I2C to communicate to NTAG
     nt3h_Initialise();
+    nt3h_WriteNdefUint16Data(0);
 
     //Inizialize MEMS Sensor
     response = LIS3DH_SetMode(LIS3DH_POWER_DOWN);
@@ -45,7 +47,7 @@ int main(void)
     //reboeet memory content
     response = LIS3DH_Reboot();
     //set ODR (turn ON device)
-    response = LIS3DH_SetODR(LIS3DH_ODR_100Hz);
+    response = LIS3DH_SetODR(LIS3DH_ODR_10Hz);
     //set Fullscale
     response = LIS3DH_SetFullScale(LIS3DH_FULLSCALE_2);
     //set axis Enable
@@ -64,9 +66,9 @@ int main(void)
     //write 08h into CTRL_REG5
     response = LIS3DH_Int1LatchEnable(MEMS_DISABLE);
     //write 10h into INT1_THS
-    response = LIS3DH_SetInt1Threshold(0x18);
+    response = LIS3DH_SetInt1Threshold(0x14);
     //write 00h into INT1_DURATION
-    response = LIS3DH_SetInt1Duration(0x00);
+    response = LIS3DH_SetInt1Duration(0x01);
 
     //read HP_FILTER_RESET
     response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
@@ -74,6 +76,7 @@ int main(void)
     response = LIS3DH_SetIntConfiguration(0x2A);
 
     INT1Init();
+    TimerInit();
 
     while (1)
     {
@@ -83,9 +86,8 @@ int main(void)
         if(step_int_cnt)
         {
             step_int_cnt--;
-        }
-        else
-        {
+            if(!step_int_cnt)
+            {
             uint8_t temp;
 
             response = LIS3DH_GetInt1Src(&temp);
@@ -93,6 +95,11 @@ int main(void)
             response = LIS3DH_SetIntConfiguration(0x2A);
 
             nt3h_WriteNdefUint16Data(steps);
+            }
+        }
+        if(time_out && !step_int_cnt)
+        {
+            time_out = 0;
 
             Sleep();
 
