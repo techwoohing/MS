@@ -54,7 +54,7 @@
  ********************************************************************/
 void TimerInit(void)
 {	
-	PR1 = 3125;
+	PR1 = 10000;
 	
 	IPC0bits.T1IP = 5;
         T1CON = 0;
@@ -69,10 +69,7 @@ void __attribute__((interrupt,auto_psv)) _T1Interrupt()
     IEC0bits.T1IE = 0;
     T1CONbits.TON = 0;
 
-    IFS1bits.INT1IF = 0;
-    IEC1bits.INT1IE = 1;
-
-    time_out = 1;
+    time_out = 0;
 }
 
 /*********************************************************************

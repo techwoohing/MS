@@ -57,7 +57,7 @@
 
 extern volatile uint32_t steps;
 extern uint8_t step_int_cnt;
-extern uint8_t time_out;
+extern volatile uint8_t time_out;
 /*****************************************************************************
  * EOF
  *****************************************************************************/

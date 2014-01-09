@@ -24,7 +24,9 @@ _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_
 
 volatile unsigned long steps = 0;
 unsigned char step_int_cnt = 0;
-unsigned char time_out = 1;
+volatile unsigned char time_out = 0;
+unsigned long ntag_steps = 0;
+unsigned int temp_steps;
 
 int main(void)
 {
@@ -47,7 +49,7 @@ int main(void)
     //reboeet memory content
     response = LIS3DH_Reboot();
     //set ODR (turn ON device)
-    response = LIS3DH_SetODR(LIS3DH_ODR_10Hz);
+    response = LIS3DH_SetODR(LIS3DH_ODR_25Hz);
     //set Fullscale
     response = LIS3DH_SetFullScale(LIS3DH_FULLSCALE_2);
     //set axis Enable
@@ -66,9 +68,9 @@ int main(void)
     //write 08h into CTRL_REG5
     response = LIS3DH_Int1LatchEnable(MEMS_DISABLE);
     //write 10h into INT1_THS
-    response = LIS3DH_SetInt1Threshold(0x14);
+    response = LIS3DH_SetInt1Threshold(0x18);
     //write 00h into INT1_DURATION
-    response = LIS3DH_SetInt1Duration(0x01);
+    response = LIS3DH_SetInt1Duration(0x00);
 
     //read HP_FILTER_RESET
     response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
@@ -94,13 +96,22 @@ int main(void)
             response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
             response = LIS3DH_SetIntConfiguration(0x2A);
 
+#if 0
+            temp_steps = nt3h_ReadNdefUint16Data();
+            if(!temp_steps) // cleared by app
+            {
+                steps = steps - ntag_steps;
+            }
+
+            ntag_steps = steps;
+#endif
+
             nt3h_WriteNdefUint16Data(steps);
+
             }
         }
-        if(time_out && !step_int_cnt)
+        if(!time_out && !step_int_cnt)
         {
-            time_out = 0;
-
             Sleep();
 
             // Setup SPI
