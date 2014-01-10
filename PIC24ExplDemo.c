@@ -62,27 +62,27 @@ int main(void)
     response = LIS3DH_HPFAOI2Enable(MEMS_DISABLE);
     response = LIS3DH_SetHPFMode(LIS3DH_HPM_NORMAL_MODE_RES);
     response = LIS3DH_SetHPFCutOFF(LIS3DH_HPFCF_1);
-    response = LIS3DH_SetFilterDataSel(MEMS_ENABLE);
+    response = LIS3DH_SetFilterDataSel(MEMS_DISABLE);//MEMS_ENABLE
     //write 40h into CTRL_REG3
     response = LIS3DH_SetInt1Pin(LIS3DH_I1_INT1_ON_PIN_INT1_ENABLE);
     //write 08h into CTRL_REG5
     response = LIS3DH_Int1LatchEnable(MEMS_DISABLE);
     //write 10h into INT1_THS
-    response = LIS3DH_SetInt1Threshold(0x18);
+    response = LIS3DH_SetInt1Threshold(0x18);//0x18
     //write 00h into INT1_DURATION
     response = LIS3DH_SetInt1Duration(0x00);
 
     //read HP_FILTER_RESET
     response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
     //write 2Ah into INT1_CFG
-    response = LIS3DH_SetIntConfiguration(0x2A);
+    response = LIS3DH_SetIntConfiguration(0x95);//0x2A
 
     INT1Init();
     TimerInit();
 
     while (1)
     {
-//        AxesRaw_t data;
+        AxesRaw_t data;
 
 //        response = LIS3DH_GetAccAxesRaw(&data);
         if(step_int_cnt)
@@ -93,8 +93,8 @@ int main(void)
             uint8_t temp;
 
             response = LIS3DH_GetInt1Src(&temp);
-            response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
-            response = LIS3DH_SetIntConfiguration(0x2A);
+//            response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
+            response = LIS3DH_SetIntConfiguration(0x95);//0x2A
 
 #if 0
             temp_steps = nt3h_ReadNdefUint16Data();
