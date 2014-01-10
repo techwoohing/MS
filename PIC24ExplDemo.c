@@ -19,7 +19,7 @@
 // Setup configuration bits
 _CONFIG1(WDTPS_PS1 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx1 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
 _CONFIG2(POSCMOD_NONE & I2C1SEL_PRI & IOL1WAY_OFF & OSCIOFNC_OFF & FCKSM_CSDCMD & FNOSC_FRCPLL & PLL96MHZ_ON & PLLDIV_NODIV & IESO_ON)   // OSCIOFNC_ON: get RA3 as digital I/O
-_CONFIG3(WPFP_WPFP0 & SOSCSEL_SOSC & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)   // SOSCSEL_IO: get RA4 and RB4 as digital I/O
+_CONFIG3(WPFP_WPFP0 & SOSCSEL_IO & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)   // SOSCSEL_IO: get RA4 and RB4 as digital I/O
 _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_OFF)
 
 volatile unsigned long steps = 0;
@@ -85,39 +85,52 @@ int main(void)
         AxesRaw_t data;
 
 //        response = LIS3DH_GetAccAxesRaw(&data);
-        if(step_int_cnt)
-        {
-            step_int_cnt--;
-            if(!step_int_cnt)
-            {
-            uint8_t temp;
 
-            response = LIS3DH_GetInt1Src(&temp);
-//            response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
-            response = LIS3DH_SetIntConfiguration(0x95);//0x2A
 
-#if 0
-            temp_steps = nt3h_ReadNdefUint16Data();
-            if(!temp_steps) // cleared by app
+         if(NTAG_INTR == 1)
+         {
+             asm("nop");//breakpoint
+             asm("nop");//breakpoint
+             asm("nop");//breakpoint
+             asm("nop");//breakpoint
+         }
+         else
+         {
+
+            if(step_int_cnt)
             {
-                steps = steps - ntag_steps;
+                step_int_cnt--;
+                if(!step_int_cnt)
+                {
+                uint8_t temp;
+
+                response = LIS3DH_GetInt1Src(&temp);
+    //            response = LIS3DH_ReadReg(LIS3DH_REFERENCE_REG);
+                response = LIS3DH_SetIntConfiguration(0x95);//0x2A
+
+
+                temp_steps = nt3h_ReadNdefUint16Data();
+                if(!temp_steps) // cleared by app
+                {
+                    steps = steps - ntag_steps;
+                }
+
+                ntag_steps = steps;
+
+
+                nt3h_WriteNdefUint16Data(steps);
+
+                }
+            }
+            if(!time_out && !step_int_cnt)
+            {
+                Sleep();
+
+                // Setup SPI
+                SPIInit();
             }
 
-            ntag_steps = steps;
-#endif
-
-            nt3h_WriteNdefUint16Data(steps);
-
-            }
         }
-        if(!time_out && !step_int_cnt)
-        {
-            Sleep();
-
-            // Setup SPI
-            SPIInit();
-        }
-
     }// End of while(1)...
 }// End of main()...
 
