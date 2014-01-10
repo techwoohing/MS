@@ -125,6 +125,10 @@ uint16_t nt3h_ReadNdefUint16Data (void)
 }
 
 
+
+
+
+
 void nt3h_Initialise (void)
 {
     uint8_t sessionData[NT3H_BLOCk_SIZE];
@@ -163,10 +167,127 @@ void nt3h_Initialise (void)
  * Private Function Prototypes
  *************************************************************************/
 
+void waitForAckWithBreak (void)
+{
+    uint16_t i;
+    i=50000;
+    
+    while(I2C2STATbits.ACKSTAT)
+    {
+        i--;
+        if(i==0)
+        {
+            break;
+        }
+    }
+}
 
+
+
+#define SESSION_BLOCK   0xFE
 /*************************************************************************
  * Exported Functions
  *************************************************************************/
+void nt3h_ReadSessionReg  (uint8_t reg, uint8_t* pData)
+{
+    /**************************************************************************
+    Send device address and set receive mode
+    **************************************************************************/
+    I2C2CONbits.SEN = 1;  //Send start bit
+
+    while(I2C2CONbits.SEN);  //Wait until Start sequence is completed
+    /**************************************************************************
+    Write register address byte
+    **************************************************************************/
+    I2C2TRN = (uint8_t)(SLAVE_ADRESS|WR_CMD_BITMASK);//Write Slave address and set master for transmission
+    while(I2C2STATbits.TBF); //Wait till address is transmitted
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+
+    waitForAckWithBreak ();
+    
+    /*
+    while(I2C2STATbits.ACKSTAT); //Wait for ACK from slave
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+    */
+    
+    
+    /**************************************************************************
+    Write MEMA byte
+    **************************************************************************/
+    I2C2TRN = (uint8_t)SESSION_BLOCK; //Write register address to transmit buffer
+    while(I2C2STATbits.TBF); //Wait till address is transmitted
+    
+    waitForAckWithBreak ();
+    
+    /*
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+    while(I2C2STATbits.ACKSTAT); //Wait for ACK from slave
+*/
+    
+    /**************************************************************************
+    Write register address byte
+    **************************************************************************/
+    I2C2TRN = (uint8_t)reg; //Write register address to transmit buffer
+    while(I2C2STATbits.TBF); //Wait till address is transmitted
+    waitForAckWithBreak ();
+    /*
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+    while(I2C2STATbits.ACKSTAT); //Wait for ACK from slave
+    */
+    //Send repeat start bit
+    I2C2CONbits.RSEN = 1;  //Send repeat start bit
+
+    while(I2C2CONbits.RSEN);  //Wait until repeat start sequence is completed
+
+    //Set master for reception
+    I2C2TRN = (uint8_t)(SLAVE_ADRESS|RD_CMD_BITMASK);//Write Slave address and set master for reception
+    while(I2C2STATbits.TBF); //Wait till address is transmitted
+    
+    waitForAckWithBreak ();
+    
+    /*
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+
+    while(I2C2STATbits.ACKSTAT); //Wait for ACK from slave
+
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+*/
+    /**************************************************************************
+    Receive register value
+    **************************************************************************/
+    I2C2CONbits.RCEN = 1; //Enable master recieve mode
+    while(I2C2CONbits.RCEN);
+    I2C2STATbits.I2COV = 0;
+    *pData = I2C2RCV;//Copy received data to local variable
+
+    I2C2CONbits.ACKDT = 0; //give the ack
+    I2C2CONbits.ACKEN = 1;
+
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+
+    I2C2CONbits.PEN = 1; //Send stop bit
+    while(I2C2CONbits.PEN); //Wait until stop sequence is completed
+    while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
+          I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
+
+}
+
+
+
+
+
+
+
+
+
+
 /*************************************************************************
  *  @brief      <A description here>
  *
@@ -223,7 +344,7 @@ void nt3h_ReadBlock  (uint8_t block, uint8_t* pData, uint8_t nBytes)
 
     while(I2C2CONbits.SEN);  //Wait until Start sequence is completed
 
-    I2C2TRN = (uint8_t)(0xAA);//Write Slave address and set master for transmission
+    I2C2TRN = (uint8_t)(SLAVE_ADRESS|WR_CMD_BITMASK);//Write Slave address and set master for transmission
     while(I2C2STATbits.TBF); //Wait till address is transmitted
     while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
           I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
@@ -238,18 +359,24 @@ void nt3h_ReadBlock  (uint8_t block, uint8_t* pData, uint8_t nBytes)
     **************************************************************************/
     I2C2TRN = (uint8_t)block; //Write register address to transmit buffer
     while(I2C2STATbits.TBF); //Wait till address is transmitted
+    
+    waitForAckWithBreak ();
+    /*
     while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
           I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
     while(I2C2STATbits.ACKSTAT); //Wait for ACK from slave
-
+*/
     //Send repeat start bit
     I2C2CONbits.RSEN = 1;  //Send repeat start bit
 
     while(I2C2CONbits.RSEN);  //Wait until repeat start sequence is completed
 
     //Set master for reception
-    I2C2TRN = (uint8_t)(0xAB);//Write Slave address and set master for reception
+    I2C2TRN = (uint8_t)(SLAVE_ADRESS|RD_CMD_BITMASK);//Write Slave address and set master for reception
     while(I2C2STATbits.TBF); //Wait till address is transmitted
+    
+    waitForAckWithBreak ();
+    /*
     while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
           I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
 
@@ -257,7 +384,7 @@ void nt3h_ReadBlock  (uint8_t block, uint8_t* pData, uint8_t nBytes)
 
 	while(I2C2CONbits.SEN || I2C2CONbits.RSEN || I2C2CONbits.PEN || I2C2CONbits.RCEN ||
           I2C2CONbits.ACKEN || I2C2STATbits.TRSTAT);//Wait for I2C idle state
-
+*/
     /**************************************************************************
     Receive register value
     **************************************************************************/

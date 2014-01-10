@@ -20,7 +20,11 @@ void ioMap(){
 
     TRISA &= 0xFFFC;        /* RA0 & RA1 are output */
     TRISB &= 0xFEFF;        /* RB8 is output */
-    TRISB |= 0x0280;        /* RB7 & RB9 are input */
+
+
+
+
+    TRISB |= 0x0290;        /* RB4, RB7 & RB9 are input */
 
     PORTB |= 0x0100;
 

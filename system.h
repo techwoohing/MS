@@ -54,7 +54,7 @@
 
 #define LIS3DH_CS_LOW   PORTB &= 0xFEFF
 #define LIS3DH_CS_HI    PORTB |= 0x0100
-
+#define NTAG_INTR       PORTBbits.RB4
 extern volatile uint32_t steps;
 extern uint8_t step_int_cnt;
 extern volatile uint8_t time_out;

@@ -29,6 +29,10 @@
 #define NT3H_BLOCk_SIZE   16  //16 bytes per block
 
 
+//byte address at Session register page
+#define NT3H_NC_REG_BYTE                0
+#define NT3H_NS_REG_BYTE                6
+#define NT3H_RF_FIELD_PRESENT_BITMASK   0x01
 /*************************************************************************
  *   Global typedefs and enums
  *************************************************************************/
@@ -41,7 +45,7 @@ void nt3h_ReadBlock  (uint8_t block, uint8_t* pData, uint8_t nBytes);
 void nt3h_WriteBlock (uint8_t block, uint8_t* pData, uint8_t nBytes);
 void nt3h_WriteNdefUint16Data (uint16_t data);
 uint16_t nt3h_ReadNdefUint16Data (void);
-
+void nt3h_ReadSessionReg  (uint8_t reg, uint8_t* pData);
 /*************************************************************************
  *   Global Data
  *************************************************************************/
