@@ -27,10 +27,17 @@ unsigned char step_int_cnt = 0;
 volatile unsigned char time_out = 0;
 unsigned long ntag_steps = 0;
 unsigned int temp_steps;
+unsigned char response;
+
+#ifdef __DEBUG_NFC
+void nfctest (void);
+#else
+void sensorRun (void);
+#endif
 
 int main(void)
 {
-    unsigned char response;
+
 
     ioMap();
     lockIO();
@@ -84,18 +91,39 @@ int main(void)
     {
         AxesRaw_t data;
 
-//        response = LIS3DH_GetAccAxesRaw(&data);
+        if(NTAG_INTR == 1)
+        {
+            asm("nop");//breakpoint
+            asm("nop");//breakpoint
+            asm("nop");//breakpoint
+            asm("nop");//breakpoint
+        }
+        else
+        {
+            #ifdef __DEBUG_NFC
+            nfctest ();
+            #else
+            sensorRun ();
+            #endif
+        }
+    }// End of while(1)...
+}// End of main()...
 
-
-         if(NTAG_INTR == 1)
-         {
-             asm("nop");//breakpoint
-             asm("nop");//breakpoint
-             asm("nop");//breakpoint
-             asm("nop");//breakpoint
-         }
-         else
-         {
+#ifdef __DEBUG_NFC
+void nfctest (void)
+{
+    uint16_t sum;
+    if(step_int_cnt)
+    {
+        sum = nt3h_ReadNdefUint16Data();
+        sum += step_int_cnt;
+        step_int_cnt = 0;
+        nt3h_WriteNdefUint16Data(sum);
+    }
+}
+#else
+void sensorRun (void)
+{
 
             if(step_int_cnt)
             {
@@ -130,7 +158,5 @@ int main(void)
                 SPIInit();
             }
 
-        }
-    }// End of while(1)...
-}// End of main()...
-
+}
+#endif /* __DEBUG_NFC */
